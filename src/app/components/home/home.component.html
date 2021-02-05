@@ -1,0 +1,19 @@
+<div class="center big-container">
+	<div id="wr">
+		<div #container id="container"></div>
+		<div class="brk">
+			<p class="mb">
+				Tasks Completed: {{ completed }}
+			</p>
+			<button (click)="incrementTasks(true)" class="btn">
+				INCREMENT
+			</button>
+			<button (click)="incrementTasks(false)" class="btn">
+				DECREMENT
+			</button>
+		</div>
+	</div>
+	<div class="third">
+		Out of: <input (change)="wholeChanged()" type="number" min="1" max="999" id="whole" [(ngModel)]="whole">
+	</div>
+</div>
