@@ -11,6 +11,17 @@
 	margin-bottom: 1rem;
 }
 
+a {
+	display: inline-block;
+	padding: .5rem;
+	width: fit-content;
+	transition: all .4s;
+	&:hover,&:active {
+		color: #00000099;
+		border-bottom: #000000aa solid 1px;
+	}
+}
+
 .big-container {
 	font-family: "Raleway", Helvetica, sans-serif;
 	font-size: 2rem;

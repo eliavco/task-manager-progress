@@ -51,6 +51,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
 		});
 	}
 
+	reset() {
+		this.manager.reset();
+		this.animate();
+	}
+
 	incrementTasks(increment: boolean): void {
 		const { completed, whole } = this.manager;
 		if ((increment && (completed < whole)) || (!increment && (completed > 0))) {

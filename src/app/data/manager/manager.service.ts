@@ -9,7 +9,7 @@ import { Manager } from 'src/app/models/manager.model';
 })
 export class ManagerService {
 	private readonly deafultState: Manager = { tasks: { completed: 0, whole: 1 } };
-
+	private readonly localStorageItem = 'manager';
 	private readonly initialState = _.defaultsDeep((localStorage.manager ? JSON.parse(localStorage.manager) || {} : {}), this.deafultState);
 	// tslint:disable-next-line: variable-name
 	private readonly _manager = new BehaviorSubject<Manager>(this.initialState);
@@ -20,11 +20,16 @@ export class ManagerService {
 	set currentManager(nManager: Manager) {
 		const newManager = _.defaultsDeep(nManager, this.currentManager);
 		this._manager.next(newManager);
-		localStorage.setItem('manager', JSON.stringify(newManager));
+		localStorage.setItem(this.localStorageItem, JSON.stringify(newManager));
 	}
 
 	get completed(): number { return this.currentManager.tasks.completed; } get whole(): number { return this.currentManager.tasks.whole; }
 	set completed(nCompleted: number) { this.currentManager = { tasks: { whole: undefined, completed: nCompleted } }; } set whole(nWhole: number) { this.currentManager = { tasks: { whole: nWhole, completed: undefined } }; }
+
+	reset() {
+		this._manager.next(this.initialState);
+		localStorage.removeItem(this.localStorageItem);
+	}
 
 	constructor() { }
 }
