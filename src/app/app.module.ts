@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { BroadcastChannelService } from './services/broadcast-channel/broadcast-channel.service';
 import { ManagerService } from './data/manager/manager.service';
 import { HomeComponent } from './components/home/home.component';
 import { FormsModule } from '@angular/forms';
@@ -22,6 +23,7 @@ import { FormsModule } from '@angular/forms';
 	],
 	providers: [
 		ManagerService,
+		BroadcastChannelService,
 	],
 	bootstrap: [AppComponent]
 })

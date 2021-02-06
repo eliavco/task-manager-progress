@@ -38,16 +38,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
 	whole = this.manager.whole;
 	completed = this.manager.completed;
 
-	constructor(private manager: ManagerService) { }
+	constructor(private manager: ManagerService,) { }
 
 	ngOnInit(): void {
 		this.initializeManager();
 	}
 	
 	initializeManager() {
+		const animate = this.animate.bind(this);
 		this.manager.manager.subscribe(nManager => {
 			this.completed = nManager.tasks.completed;
 			this.whole = nManager.tasks.whole;
+			animate();
 		});
 	}
 
@@ -65,7 +67,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
 	}
 
 	animate(): void {
-		this.bar.animate(this.manager.completed / this.manager.whole);
+		if (this.bar) {
+			this.bar.animate(this.manager.completed / this.manager.whole);
+		}
 	}
 
 	wholeChanged(): void {

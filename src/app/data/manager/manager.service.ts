@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import * as _ from 'lodash';
 
 import { Manager } from 'src/app/models/manager.model';
+import { BroadcastChannelService } from 'src/app/services/broadcast-channel/broadcast-channel.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -10,7 +11,9 @@ import { Manager } from 'src/app/models/manager.model';
 export class ManagerService {
 	private readonly deafultState: Manager = { tasks: { completed: 0, whole: 1 } };
 	private readonly localStorageItem = 'manager';
-	private readonly initialState = _.defaultsDeep((localStorage.manager ? JSON.parse(localStorage.manager) || {} : {}), this.deafultState);
+	private get initialState(): Manager {
+		return _.defaultsDeep((localStorage.manager ? JSON.parse(localStorage.manager) || {} : {}), this.deafultState);
+	}
 	// tslint:disable-next-line: variable-name
 	private readonly _manager = new BehaviorSubject<Manager>(this.initialState);
 	readonly manager = this._manager.asObservable();
@@ -24,12 +27,18 @@ export class ManagerService {
 	}
 
 	get completed(): number { return this.currentManager.tasks.completed; } get whole(): number { return this.currentManager.tasks.whole; }
-	set completed(nCompleted: number) { this.currentManager = { tasks: { whole: undefined, completed: nCompleted } }; } set whole(nWhole: number) { this.currentManager = { tasks: { whole: nWhole, completed: undefined } }; }
+	set completed(nCompleted: number) { this.currentManager = { tasks: { whole: undefined, completed: nCompleted } }; this.bc.sendUpdated(); } set whole(nWhole: number) { this.currentManager = { tasks: { whole: nWhole, completed: undefined } }; this.bc.sendUpdated(); }
 
 	reset() {
-		this._manager.next(this.initialState);
 		localStorage.removeItem(this.localStorageItem);
+		this.update();
 	}
 
-	constructor() { }
+	update() {
+		this.currentManager = this.initialState;
+	}
+
+	constructor(private bc: BroadcastChannelService) { 
+		this.bc.addEventListener({ code: 0, cb: this.update.bind(this) });
+	}
 }
